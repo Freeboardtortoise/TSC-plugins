@@ -1,0 +1,53 @@
+sinit = []
+
+def init(ip):
+    global sinit
+    current_ID = 100000
+    import socket
+    import _thread
+    import importlib
+    print("Tortoise server client terminal interface")
+    server = ip
+    port = 5555
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    try:
+        s.bind((server, port))
+        print("server started")
+    except socket.error as e:
+        print("ERROR, try again")
+        print(e)
+    
+    s.listen()
+    print("waiting for connection")
+    sinit = [s, current_ID]
+    return [s, current_ID]
+
+def get_clients():
+    global sinit
+    import client_function
+    import _thread
+    s = sinit[0]
+    sinit[1] += 1
+    conn, addr = s.accept()
+    print("new connection:" + str(addr))
+    _thread.start_new_thread(client_function.client_threaded, (conn, addr, sinit[1]))
+
+def recieve(conn):
+    try:
+        data = conn.recv(2048)
+        data = data.decode("utf-8")
+    
+        if not data:
+            return None
+        else:
+            return data
+    except:
+        return None
+
+def send(conn, reply):
+    try:
+        conn.sendall(str.encode(reply))
+        return True
+    except:
+        return False
