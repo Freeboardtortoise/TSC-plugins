@@ -1,6 +1,6 @@
-import TSC_server
+import TSC.server
 def client_threaded(conn, addr, ID):
-    print(f"hello {conn}")
-    while True:
-        data = TSC_server.recieve(conn)
-        TSC_server.send(conn, "Tortoises are clever and fast")
+    connected = True
+    while connected:
+        TSC.server.recieve(conn)
+    return False

@@ -1,7 +1,12 @@
-import TSC_server
-TSC_server.init("127.0.0.1")
-
+import TSC.server
+import TSC.plugins.server_console
+import _thread
+TSC.server.init("127.0.0.1")
+TSC.plugins.server_console.init()
 
 running = True
+TSC.server.get_clients_threaded()
 while running:
-    TSC_server.get_clients()
+    connections = TSC.server.get_connections()
+
+    TSC.plugins.server_console.server_console(connections)

@@ -1,11 +1,11 @@
+import _thread
 sinit = []
+connections = []
 
 def init(ip):
-    global sinit
+    global sinit, connections
     current_ID = 100000
     import socket
-    import _thread
-    import importlib
     print("Made with TSC")
     print("Darion Knighton-Fitt")
     server = ip
@@ -25,14 +25,15 @@ def init(ip):
     return [s, current_ID]
 
 def get_clients():
-    global sinit
-    import client_function
+    global sinit, connections
+    import TSC.client_function
     import _thread
     s = sinit[0]
     sinit[1] += 1
     conn, addr = s.accept()
-    print("new connection:" + str(addr))
-    _thread.start_new_thread(client_function.client_threaded, (conn, addr, sinit[1]))
+    print("\n new connection:" + str(addr))
+    _thread.start_new_thread(TSC.client_function.client_threaded, (conn, addr, sinit[1]))
+    connections = connections + [[conn, addr, sinit[1]]]
 
 def recieve(conn):
     try:
@@ -52,3 +53,13 @@ def send(conn, reply):
         return True
     except:
         return False
+
+def get_initc():
+    global initc
+    return initc
+
+def get_connections():
+    global connections
+    return connections
+def get_clients_threaded():
+    _thread.start_new_thread(get_clients, ())
