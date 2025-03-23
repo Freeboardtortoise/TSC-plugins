@@ -6,7 +6,8 @@ def init(ip):
     import socket
     import _thread
     import importlib
-    print("Tortoise server client terminal interface")
+    print("Made with TSC")
+    print("Darion Knighton-Fitt")
     server = ip
     port = 5555
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
