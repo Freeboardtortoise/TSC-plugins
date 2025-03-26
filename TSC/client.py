@@ -21,6 +21,8 @@ class Network:
             return self.client.recv(2048).decode()
         except socket.error as e:
             print(e)
+        except BrokenPipeError:
+            return False
 
 
 
@@ -37,8 +39,5 @@ def init(ip):
     cinit = (s, n)
 
 def send(message):
-    try:
-        global cinit
-        return cinit[1].send(message)
-    except:
-        return False
+    global cinit
+    return cinit[1].send(message)

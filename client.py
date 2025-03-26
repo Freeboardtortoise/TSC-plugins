@@ -1,8 +1,10 @@
 import TSC.client
-import TSC.plugins.server_console
-import time
+import console
 TSC.client.init('127.0.0.1')
+console.init()
 
-run = True
-while run:
-    time.sleep(1)
+running = True
+while running:
+    print("connection attempt")
+    input("press enter to continue")
+    TSC.client.send("Connection attempt")
