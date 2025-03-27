@@ -1,0 +1,44 @@
+{
+  // These tasks will run in order when initializing your CodeSandbox project.
+  "setupTasks": [
+    {
+      "command": "rm -r TSC",
+      "name": "r"
+    },
+    {
+      "command": "git clone https://github.com/Freeboardtortoise/TSC.git",
+      "name": "g"
+    },
+    {
+      "command": "git clone https://github.com/Freeboardtortoise/TSC-plugins.git",
+      "name": "h"
+    },
+    {
+      "command": "mv TSC-plugins/* TSC/plugins",
+      "name": "m"
+    },
+    {
+      "command": "rm -r TSC-plugins",
+      "name": "r"
+    }
+  ],
+
+  // These tasks can be run from CodeSandbox. Running one will open a log in the app.
+  "tasks": {
+    "g": {
+      "name": "g",
+      "command": "git clone https://github.com/Freeboardtortoise/TSC-plugins.git",
+      "runAtStart": true
+    },
+    "r": {
+      "name": "r",
+      "command": "rm TSC/plugins/README.md",
+      "runAtStart": true
+    },
+    "m": {
+      "name": "m",
+      "command": "git clone https://github.com/Freeboardtortoise/TSC-plugins.git",
+      "runAtStart": true
+    }
+  }
+}
