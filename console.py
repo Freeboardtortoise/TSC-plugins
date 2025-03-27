@@ -60,7 +60,7 @@ def console_thing(connections):
                         TSC.server.send(conn, command[2])
     
     elif command == "quit":
-        quit()
+        return False
     elif command == "custom":
         return True
     elif command == "clear":
