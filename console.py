@@ -8,11 +8,12 @@ def init():
     print("this project uses the TSC-console extension made by Philip G Hall")
     file = open("TSC/plugins/plugins.txt","r")
     for line in (file.read()).split("\n"):
-        if line == "console":
-            pass
         if line == "usernames":
             import usernames
             importedThings = importedThings + ["usernames"]
+        else:
+            pass
+    file.close()
 
 def console_thing(connections):
     global importedThings
@@ -33,6 +34,7 @@ def console_thing(connections):
         if command == "list":
             for connection in connections:
                 if "usernames" in importedThings:
+                    import TSC.plugins.usernames as usernames
                     print(f"ipv4: {str(connection[1])}, ID: {str(connection[2])}, Username: {usernames.get_username(connection[1])}")
                 else:
                     print(f"ipv4: {str(connection[1])}, ID: {str(connection[2])}")
@@ -40,6 +42,7 @@ def console_thing(connections):
         if command.split(" ")[0] == "kick":
             for connection in connections:
                 if "usernames" in importedThings:
+                    import TSC.plugins.usernames as usernames
                     if connection[1][0] == usernames.get_username(command.split(" ")[1]):
                         conn = connection[0]
                         conn.close()
@@ -51,6 +54,7 @@ def console_thing(connections):
         if command.split(" ")[0] == "send":
             for connection in connections:
                 if "usernames" not in importedThings:
+                    import TSC.plugins.usernames as usernames
                     if connection[1][0] == command.split(" ")[1]:
                         conn = connection[0]
                         TSC.server.send(conn, command[2])
