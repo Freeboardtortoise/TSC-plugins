@@ -1,6 +1,7 @@
 # How to use the TSC plugins
 
 ## console
+the TSC.console plugin is used to simplify the use of the server so that you can interact with it without editing the code
 
 ### init
 import TSC.plugins.console
@@ -28,12 +29,20 @@ TSC.plugins.usernames.get_username(_IP or ID)
 TSC.plugins.usernames.set_username(_IP_or ID, _username_)
 
 ## TSC-databses
+this is a simplified database manager that uses a key, value system.
+please use the extension .tscdb for best performance
+you will find all of the commands bellow and what they do
+
+### Datatypes
+1. string: for lists of letters
+2. int: for whole numbers
+3. float: for numbers with decimal points
 
 ### importing the plugin
-import TSC.plugins.databses
+import TSC.plugins.databases as databases
 
 ### making a connection
-conn = TSC.plugins.databases.Connection(filename=_your filename_)
+conn = databases.Connection(_your filename_)
 
 ### verifying a database file
 conn.verify()
@@ -42,8 +51,9 @@ conn.verify()
 conn.make_table(_table name_)
 
 ### writing to a TSC-databse
-conn.add_value(_table_,_key_,_value_)
-editing values
+conn.add_value(_table_,_key_,_value_, _optional: datatype_)
+
+NB: the default datatype is 'string'
 
 ### reading from a TSC-database
 conn.read(_optional: table_,_optional: value_)
@@ -59,3 +69,8 @@ conn.clear()
 
 ### reset connection back to origonal before opening
 conn.reset()
+
+### getting a list of all of the tables
+conn.get_tables
+
+the nice thing about TSC-databases is that there is no need to close the connection only to use conn.write() to make the changes
