@@ -1,5 +1,7 @@
 TSC/
 client.py
 server.py
+database.tscdb
+database-testing.py
 .idea/
 .codesandbox/
