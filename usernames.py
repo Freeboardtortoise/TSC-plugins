@@ -1,15 +1,11 @@
 import TSC.client
 import TSC.server
 
-def init(server_name):
-    #opens and adds the server name to the server_info.txt file
-    file = open("TSC/plugins/server_files/server_info.txt", "w")
-    file.write(f"name, {server_name}\n")
-    file.close()
+usernames_file = ''
+def init(usernames_location):
+    global usernames_file
     #clears the usernames.txt file
-    file = open("TSC/plugins/server_files/usernames.txt", "w")
-    file.write("")
-    file.close()
+    open(usernames_file, "w").close()
 
 def get_username(addr):
     #opens and reads the usernames.txt file
