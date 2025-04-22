@@ -75,14 +75,17 @@ class Connection:
         if name in self.tables:
             print("ERROR")
             print(f"TABLE: {name} already exists")
-            import sys
-            sys.exit(1)
+            return 1
         else:
             self.tables = self.tables + [name]
             return 0
 
     def clear(self):
-        open(self.file, "w").close()
+        try:
+            open(self.file, "w").close()
+            return 0
+        except:
+            return 1
 
     def add_value(self, table, key, value, datatype='string'):
         if datatype == 'string':
