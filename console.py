@@ -64,8 +64,8 @@ def console_thing(connections):
                         TSC.server.send(conn, command[2])
     
     elif command == "quit":
-        return False
-    elif command == "custom":
-        return True
+        import sys
+        print("exiting")
+        sys.exit(0)
     elif command == "clear":
-        print("\n"*50)
+        print("\n" * 50)
