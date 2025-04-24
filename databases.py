@@ -27,13 +27,25 @@ def _floatify(string):
 
     return float(string)
 
+def _check_file(filename):
+    try:
+        open(filename, 'r').close()
+        return True
+    except:
+        return False
+
 class Connection:
-    def __init__(self, filename):
+    def __init__(self, filename, _encrypt=False):
         self.file = filename
         self.valid = False
         self.splitter = "$|$"
         self.values = []
         self.tables = []
+        self.encrypt = _encrypt
+        if self.encrypt:
+            pass
+        else:
+            self.passphrase = None
         open(filename, 'a').close()
         file = open(filename, 'r')
         file_len = file.read()
@@ -49,24 +61,53 @@ class Connection:
                 line = line.split(self.splitter)
                 if line[0] == "TABLE":
                     if line[1] == "NEW":
-                        self.tables.append(line[2])
+                        if self.encrypt == False:
+                            self.tables.append(line[2])
+                        else:
+                            import TSC.plugins.encrypter as e
+                            self.tables.append(e.decrypt(string=line[2], passphrase=self.passphrase))
                     if line[2] == "VALUE":
                         if line[3] == "STRING":
-                            self.values.append([line[1], line[3], line[4]])
+                            if self.encrypt == False:
+                                self.values.append([line[1], line[3], line[4]])
+                            else:
+                                import TSC.plugins.encrypter as e
+                                table = e.decrypt(string=line[1], passphrase=self.passphrase)
+                                key = e.decrypt(string=line[3], passphrase=self.passphrase)
+                                value = e.decrypt(string=line[4], passphrase=self.passphrase)
+                                self.values.append([table, key, value])
                         elif line[3] == "INT":
-                            value4 = _intify(line[4])
-                            if value4 == None:
-                                print("ERROR")
-                                print("INCORRECT DATATYPE")
+                            if self.encrypt == False:
+                                table, key, value = line[1], line[3], line[4]
+                                value = _intify(value)
+                                if value == None:
+                                    print("invalid datatype")
+                                    return 0
+                                else:
+                                    self.values.append([table, key, value])
                             else:
-                                self.values.append([line[1], line[3], value4])
+                                import TSC.plugins.encrypter as e
+                                table = e.decrypt(string=line[1], passphrase=self.passphrase)
+                                key = e.decrypt(string=line[3], passphrase=self.passphrase)
+                                value = e.decrypt(string=line[4], passphrase=self.passphrase)
+                                value = _intify(value)
+                                self.values.append([table, key, value])
                         elif line[3] == "FLOAT":
-                            value4 = _floatify(line[4])
-                            if value4 == None:
-                                print("ERROR")
-                                print("INCORRECT DATATYPE")
+                            if self.encrypt == False:
+                                table, key, value = line[1], line[3], line[4]
+                                value = _floatify(value)
+                                if value == None:
+                                    print("invalid datatype")
+                                    return 0
+                                else:
+                                    self.values.append([table, key, value])
                             else:
-                                self.values.append([line[1], line[3], value4])
+                                import TSC.plugins.encrypter as e
+                                table = e.decrypt(string=line[1], passphrase=self.passphrase)
+                                key = e.decrypt(string=line[3], passphrase=self.passphrase)
+                                value = e.decrypt(string=line[4], passphrase=self.passphrase)
+                                value = _floatify(value)
+                                self.values.append([table, key, value])
 
                 if line[0] == "TSC-database=validated":
                     self.valid = True
@@ -139,27 +180,37 @@ class Connection:
                 if self.valid == True:
                     file.write("TSC-database=validated\n")
                 for table in self.tables:
-                    file.write(f"TABLE{self.splitter}NEW{self.splitter}{table}\n")
+                    if self.encrypt == True:
+                        import TSC.plugins.encrypter as e
+                        file.write(f"TABLE{self.splitter}NEW{self.splitter}{e.encrypt(string=table, passphrase=self.passphrase)}\n")
+                    else:
+                        file.write(f"TABLE{self.splitter}NEW{self.splitter}{table}\n")
                 for value in self.values:
-                    file.write(f"TABLE{self.splitter}{value[0]}{self.splitter}VALUE{self.splitter}{value[1]}{self.splitter}{value[2]}{self.splitter}{value[3]}\n")
+                    if self.encrypt == True:
+                        table = e.encrypt(string=value[0], passphrase=self.passphrase)
+                        key = e.encrypt(string=value[1], passphrase=self.passphrase)
+                        _value = e.encrypt(string=value[2], passphrase=self.passphrase)
+                        file.write(f"TABLE{self.splitter}{table}{self.splitter}VALUE{self.splitter}{key}{self.splitter}{_value}{self.splitter}{value[3]}\n")
+                    else:
+                        file.write(f"TABLE{self.splitter}{value[0]}{self.splitter}VALUE{self.splitter}{value[1]}{self.splitter}{value[2]}{self.splitter}{value[3]}\n")
         else:
             print("ERROR")
             print("INVALID DATABASE")
             print("VERIFY DATABASE WITH conn.verify()")
 
-    def read(self, sellectedValue='', table=''):
+    def read(self, sellectedValue=None, table=None):
         returnedValues = []
-        if table == '' and sellectedValue == '':
+        if table == None and sellectedValue == None:
             return self.values
-        elif sellectedValue == '' and table != '':
+        elif sellectedValue == None and table != None:
             for value in self.values:
                 if value[0] == table:
                     returnedValues = returnedValues + [[value[1],value[2]]]
-        elif sellectedValue != '' and table == '':
+        elif sellectedValue != None and table == None:
             for value in self.values:
                 if value[1] == sellectedValue:
                     returnedValues.append(value[2])
-        elif sellectedValue != '' and table != '':
+        elif sellectedValue != None and table != None:
             for value in self.values:
                 if value[0] == table:
                     if value[1] == sellectedValue:
@@ -168,10 +219,10 @@ class Connection:
                         pass
         return returnedValues
 
-    def reset(self):
+    def reset(self, _encrypt=False):
         self.values = []
         self.tables = []
-        self.__init__(self.file)
+        self.__init__(self.file, _encrypt=_encrypt)
 
     def edit(self, table, key, value):
         for number, sellectedValue in enumerate(self.values):
@@ -189,3 +240,14 @@ class Connection:
 
     def get_table_list(self):
         return self.tables
+    
+    def encrypt_database(self, passphrase):
+        if _check_file("TSC/plugins/encrypter.py") == True:
+            self.encrypt = True
+            self.passphrase = passphrase
+            self.reset(_encrypt=True)
+            return 0
+        else:
+            print("ERROR")
+            print("encrypter.py not in directory ('TSC/plugins/encrypter.py')")
+            return 1
