@@ -5,3 +5,4 @@ database.tscdb
 database-testing.py
 .idea/
 .codesandbox/
+__pycache__/
