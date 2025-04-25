@@ -1,7 +1,4 @@
-import time
-import random
-
-def _generate_passphrase(passfile=None):
+def _generate_passphrase(passfile=None, password=None):
     import random
     letters = ["q","w","e","r","t","y",
                 "u","i","o","p","a","s",
@@ -18,25 +15,35 @@ def _generate_passphrase(passfile=None):
                 "B","N","M"," ","1","2",
                 "3","4","5","6","7","8",
                 "9","0"]
-    random.shuffle(letters)
-    letters = "".join(letters)
-    if passfile == None:
+    if not password:
+        random.shuffle(letters)
+        letters = "".join(letters)
+    else:
+        output = []
+        for letter in password:
+            if letter not in output:
+                output.append(letter)
+
+        for letter in letters:
+            if letter in output:
+                pass
+            else:
+                output.append(letter)
+        letters = "".join(output)
+    if passfile is None:
         return letters
     else:
         with open(passfile, 'w') as file:
             file.write(letters)
-        return True
+        return 0
 
 def encrypt(passphrase=None, passfile=None, string='', shift=1):
     # setting up the passphrase as letters
-    if passfile != None:
+    if passfile is not None:
         with open(passfile, 'r') as file:
             file_contents = file.read()
         letters = file_contents
-    elif passphrase != None:
-        letters = passphrase
-
-    elif passphrase == None and passfile == None:
+    else:
         print("ERROR")
         print("NO PASSFILE OR PASSPHRASE PROVIDED")
         return None
@@ -51,18 +58,18 @@ def encrypt(passphrase=None, passfile=None, string='', shift=1):
                         number = number % (len(letters))
                     output = output + letters[number]
                     blank_done = True
-        if blank_done == False:
+        if not blank_done:
             output = output + blank
     return output
 def decrypt(passphrase=None, passfile=None, string='', shift=1):
     # setting up the passphrase as letters
-    if passfile != None:
+    if passfile is not None:
         with open(passfile, 'r') as file:
             file_contents = file.read()
         letters = file_contents
-    elif passphrase != None:
+    elif passphrase is not None:
         letters = passphrase
-    elif passphrase == None and passfile == None:
+    else:
         print("ERROR")
         print("NO PASSFILE OR PASSPHRASE PROVIDED")
         return None
@@ -78,6 +85,6 @@ def decrypt(passphrase=None, passfile=None, string='', shift=1):
                         number = number % (len(letters))
                     output = output + letters[number]
                     blank_done = True
-        if blank_done == False:
+        if not blank_done:
             output = output + blank
     return output
