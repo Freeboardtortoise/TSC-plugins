@@ -1,9 +1,6 @@
 import time
 
 currentFile = None
-def str_len(string):
-    return len(string.encode('utf-8'))
-
 
 def client_send(fileName):
     import TSC.client as clt
@@ -12,12 +9,17 @@ def client_send(fileName):
             success = clt.send(f"FILE#|#{fileName}#|#SEND#|#{charactor}")
         clt.send(f"FILE#|#{fileName}#|#stop")
 
-isFile = False
-size = None
-currentFile = None
+def client_recv(data):
+    data = data.split("#|#")
+    if len(data) == 0:
+        return False
+    else:
+        with open(data[1], "a") as file:
+            file.write(data[2])
 
-def server_recieve(data):
-    global isFile, size
+
+
+def server_rcv(data):
     if data is None:
         return False
     data = data.split("#|#")
@@ -33,11 +35,3 @@ def server_send(conn, filename):
     
     for letter in file:
         ser.send(conn, f"FILE#|#{filename}#|#{letter}")
-
-def client_recv(data):
-    data = data.split("#|#")
-    if len(data) == 0:
-        return False
-    else:
-        with open(data[1], "a") as file:
-            file.write(data[2])
