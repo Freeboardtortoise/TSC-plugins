@@ -1,11 +1,13 @@
-TSC/
 .idea/
 .codesandbox/
 __pycache__/
 
-testing.py
-testing.tdb
-server.py
-client.py
-passfile.txt
+.gitignore
+
+
+TSC/
+
+server_testing.py
+client_testing.py
+
 testing.txt
