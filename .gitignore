@@ -3,9 +3,7 @@ TSC/
 .codesandbox/
 __pycache__/
 
-testing.py
-testing.tdb
-server.py
-client.py
-passfile.txt
+testing_server.py
+testing_client.py
+.gitignore
 testing.txt
