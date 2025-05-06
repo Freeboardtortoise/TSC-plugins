@@ -2,12 +2,7 @@
 .codesandbox/
 __pycache__/
 
+testing_server.py
+testing_client.py
 .gitignore
-
-
-TSC/
-
-server_testing.py
-client_testing.py
-
 testing.txt
