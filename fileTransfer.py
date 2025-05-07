@@ -28,7 +28,7 @@ def server_send(conn, fileName):
     with open(fileName, "r") as file:
         file = file.read()
     TSC.server.send(conn, f"FILE#|#{fileName}#|#START")
-    for numberm, letter in enumerate(file):
+    for number, letter in enumerate(file):
         TSC.server.send(conn, f"FILE#|#{fileName}#|#{number}#|#{letter}")
     TSC.server.send(conn, f"FILE#|#{fileName}#|#END")
 
@@ -41,17 +41,17 @@ def client_recv():
         if line_parts[0] != "FILE":
             pass
         
-        if line_parts[2] == "START":
+        elif (line_parts[0] == "FILE") and (line_parts[2] == "START"):
             if line_parts[2] in files_started:
                 pass
             else:
                 files_started.append(line_parts[1])
             
-        if line_parts[2] == "SEND" and len(line_parts) >= 4:
+        elif line_parts[2] == "SEND" and len(line_parts) >= 4 and line_parts[0] == "FILE":
             fileName = line_parts[1]
             charactor = line_parts[3]
             charactor_number = line_parts[2]
-            currentFiles.append([fileName, len(currentFiles), charactor])
+            currentFiles.append([fileName, charactor_number, charactor])
 
 def client_writeFile(file_to_write): 
     global currentFiles, files_started
