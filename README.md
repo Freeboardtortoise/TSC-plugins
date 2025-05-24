@@ -4,10 +4,10 @@ this is a collection of all of the official plugins
 
 this is the list of plugins and the developers
 
-- console Darion Knighton-Fitt
-- usernames Darion Knighton-Fitt
-- databases Darion Knighton-Fitt
-- encrypter Darion Knighton-Fitt
+- console Freeboardtortoise
+- usernames Freeboardtortoise
+- databases Freeboardtortoise
+- encrypter Freeboardtortoise
 
 ## how to import plugins
 
