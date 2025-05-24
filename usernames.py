@@ -8,8 +8,9 @@ def init(usernames_location):
     open(usernames_file, "w").close()
 
 def get_username(addr):
+    global usernames_file
     #opens and reads the usernames.txt file
-    file = open("TSC/plugins/server_files/usernames.txt", "r")
+    file = open(usernames_file, "r")
     file_contents = file.read()
     file.close()
     file = file_contents
@@ -27,8 +28,9 @@ def get_username(addr):
         return what_to_return
 
 def set_username(addr, username):
+    global usernames_file
     #checking if username is already in database
-    file = open("TSC/plugins/server_files/usernames.txt", "r")
+    file = open(usernames_file, "r")
     for line in file.read():
         line = line.split(",")
         if line[0] == addr:
@@ -38,7 +40,7 @@ def set_username(addr, username):
 
     #adding to the file the username and the address
     try:
-        file = open("TSC/plugins/server_files/usernames.txt", "a")
+        file = open(usernames_file, "a")
         file.write(f"{addr},{username}\n")
         file.close()
         return True
